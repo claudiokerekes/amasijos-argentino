@@ -386,7 +386,7 @@
       margin: 0 auto;
     }
     @media (min-width: 600px)  { .products-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(5, 1fr); } }
 
     /* Card */
     .product-card {
@@ -581,6 +581,102 @@
       padding-top: 1.5rem;
     }
 
+    /* ── Location Section ── */
+    .location-section {
+      padding: 5rem 2rem 6rem;
+      background: var(--cream);
+      position: relative;
+    }
+
+    .location-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.45fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .address-list {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .address-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .address-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(196,98,45,.10);
+      border: 1px solid rgba(196,98,45,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .address-text strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: .2rem;
+    }
+    .address-text span {
+      font-size: .9rem;
+      color: var(--text-body);
+      line-height: 1.55;
+    }
+
+    .btn-directions {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 2rem;
+      padding: .75rem 1.75rem;
+      background: var(--terracotta);
+      color: #fff;
+      text-decoration: none;
+      border-radius: var(--radius-btn);
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      min-height: 44px;
+      transition: background var(--t-fast), transform var(--t-fast);
+    }
+    .btn-directions:hover { background: var(--terra-dark); transform: scale(1.02); }
+    .btn-directions:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; }
+
+    .map-wrap {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+      aspect-ratio: 4 / 3;
+      border: 2px solid rgba(212,168,83,.25);
+    }
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+
+    @media (max-width: 860px) {
+      .location-inner {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+      }
+      .map-wrap { aspect-ratio: 16 / 10; }
+      .location-section { padding: 3.5rem 1rem 4rem; }
+    }
+
     /* ── Floating WhatsApp FAB ── */
     .fab-wa {
       position: fixed;
@@ -657,6 +753,7 @@
     <ul class="nav-links" role="list">
       <li><a href="#inicio">Inicio</a></li>
       <li><a href="#productos">Productos</a></li>
+      <li><a href="#ubicacion">Ubicación</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <button class="hamburger" id="hamburger"
@@ -671,6 +768,7 @@
   <nav class="mobile-menu" id="mobileMenu" aria-label="Menú móvil" aria-hidden="true">
     <a href="#inicio"    class="mobile-link">Inicio</a>
     <a href="#productos" class="mobile-link">Productos</a>
+    <a href="#ubicacion" class="mobile-link">Ubicación</a>
     <a href="#contacto"  class="mobile-link">Contacto</a>
   </nav>
 
@@ -699,6 +797,11 @@
         <img class="slide-img" src="assets/TARTAS%2016-9.png"
              alt="Tartas caseras argentinas" loading="lazy">
       </div>
+
+      <div class="slide" aria-hidden="true">
+        <img class="slide-img" src="assets/facturas-16-9.png"
+             alt="Facturas artesanales argentinas" loading="lazy">
+      </div>
     </div>
 
     <div class="hero-overlay" aria-hidden="true"></div>
@@ -719,6 +822,7 @@
       <button class="dot"        data-index="2" aria-label="Diapositiva 3"></button>
       <button class="dot"        data-index="3" aria-label="Diapositiva 4"></button>
       <button class="dot"        data-index="4" aria-label="Diapositiva 5"></button>
+      <button class="dot"        data-index="5" aria-label="Diapositiva 6"></button>
     </div>
   </section>
 
@@ -745,7 +849,7 @@
           <h3 class="card-name">Empanadas</h3>
           <p class="card-desc">Masa tierna, relleno generoso — un abrazo del Río de la Plata.</p>
           <a class="btn-wa"
-             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Empanadas"
+             href="https://wa.me/573124903099?text=Hola!%20Quiero%20pedir%20Empanadas"
              target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -766,7 +870,7 @@
           <h3 class="card-name">Alfajores</h3>
           <p class="card-desc">Dulce de leche entre galletas de maicena — suspiro que se deshace en el alma.</p>
           <a class="btn-wa"
-             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Alfajores"
+             href="https://wa.me/573124903099?text=Hola!%20Quiero%20pedir%20Alfajores"
              target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -787,7 +891,7 @@
           <h3 class="card-name">Tartas</h3>
           <p class="card-desc">Capas de tradición y sabor — cuentan historias de las cocinas del sur.</p>
           <a class="btn-wa"
-             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Tartas"
+             href="https://wa.me/573124903099?text=Hola!%20Quiero%20pedir%20Tartas"
              target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -808,7 +912,28 @@
           <h3 class="card-name">Pan Artesanal</h3>
           <p class="card-desc">Miga esponjosa, corteza dorada — el pan de cada día con alma del sur.</p>
           <a class="btn-wa"
-             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Pan%20Artesanal"
+             href="https://wa.me/573124903099?text=Hola!%20Quiero%20pedir%20Pan%20Artesanal"
+             target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+        </div>
+      </article>
+
+      <!-- Facturas -->
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <img src="assets/facturas-4-5.png"
+               alt="Facturas artesanales argentinas"
+               loading="lazy" width="400" height="500">
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">Facturas</h3>
+          <p class="card-desc">Hojaldres de manteca, crujientes y dorados — el desayuno que enamora desde el primer bocado.</p>
+          <a class="btn-wa"
+             href="https://wa.me/573124903099?text=Hola!%20Quiero%20pedir%20Facturas"
              target="_blank" rel="noopener noreferrer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -821,6 +946,76 @@
     </div>
   </section>
 
+  <div class="sep" aria-hidden="true"></div>
+
+  <!-- ══ LOCATION ══ -->
+  <section class="location-section" id="ubicacion">
+    <div class="section-header">
+      <p class="section-eyebrow">Ven a visitarnos</p>
+      <h2 class="section-title">¿Dónde encontrarnos?</h2>
+      <div class="section-rule" aria-hidden="true"></div>
+    </div>
+
+    <div class="location-inner">
+
+      <div class="location-info">
+        <div class="address-list">
+
+          <div class="address-row">
+            <div class="address-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="var(--terracotta)" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="address-text">
+              <strong>Centro Comercial Plaza Mayo</strong>
+              <span>Calle 4 sur # 4-15 local 16<br>Sopó, Cundinamarca</span>
+            </div>
+          </div>
+
+          <div class="address-row">
+            <div class="address-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+                   style="color: var(--terracotta)">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+            </div>
+            <div class="address-text">
+              <strong>WhatsApp</strong>
+              <span>+57 312 490 3099</span>
+            </div>
+          </div>
+
+        </div>
+
+        <a class="btn-directions"
+           href="https://www.google.com/maps/dir/?api=1&destination=4.903623,-73.942710"
+           target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+          </svg>
+          Cómo llegar
+        </a>
+      </div>
+
+      <div class="map-wrap">
+        <iframe
+          src="https://maps.google.com/maps?q=4.903623,-73.942710&hl=es&z=17&output=embed"
+          title="Ubicación Amasijos Argentinos El Maná — Centro Comercial Plaza Mayo, Sopó"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+    </div>
+  </section>
+
   <!-- ══ CONTACT FOOTER ══ -->
   <footer class="contact-footer" id="contacto">
     <div class="footer-content">
@@ -829,7 +1024,7 @@
       <p class="footer-sub">Pedidos frescos, hechos con amor — directo a tu mesa.</p>
 
       <a class="btn-footer-wa"
-         href="https://wa.me/573145678786"
+         href="https://wa.me/573124903099"
          target="_blank" rel="noopener noreferrer">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -847,7 +1042,7 @@
 
   <!-- ══ FLOATING WHATSAPP ══ -->
   <a class="fab-wa"
-     href="https://wa.me/573145678786"
+     href="https://wa.me/573124903099"
      target="_blank" rel="noopener noreferrer"
      aria-label="Contactar por WhatsApp">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
