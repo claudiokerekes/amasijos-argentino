@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Amasijos Argentinos El Maná — Panadería y pastelería argentina en Colombia. Empanadas, alfajores, tartas y pan artesanal. Pedidos por WhatsApp.">
+  <title>Amasijos Argentinos — El Maná</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Variables & Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:        #F5ECD7;
+      --cream-dark:   #EDE0C4;
+      --terracotta:   #C4622D;
+      --terra-dark:   #A8511F;
+      --espresso:     #2C1810;
+      --gold:         #D4A853;
+      --text-body:    #4A2F1E;
+      --wa-green:     #25D366;
+      --wa-dark:      #1EBE5A;
+      --radius-card:  14px;
+      --radius-btn:   50px;
+      --t-fast:       200ms ease;
+      --t-med:        350ms ease;
+      --shadow-card:  0 4px 24px rgba(44,24,16,.10);
+      --shadow-hover: 0 16px 48px rgba(44,24,16,.22);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--cream);
+      color: var(--espresso);
+      overflow-x: hidden;
+    }
+
+    /* Grain texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: .038;
+      pointer-events: none;
+      z-index: 9990;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -100px; left: 1rem;
+      z-index: 9999;
+      padding: .5rem 1rem;
+      background: var(--espresso);
+      color: var(--cream);
+      border-radius: 4px;
+      font-size: .875rem;
+      text-decoration: none;
+      transition: top .2s;
+    }
+    .skip-link:focus { top: .5rem; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .875rem 2.5rem;
+      background: rgba(44,24,16,.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,168,83,.15);
+      transition: padding var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
+    }
+    .navbar.scrolled {
+      padding: .625rem 2.5rem;
+      background: rgba(44,24,16,.97);
+      box-shadow: 0 4px 24px rgba(0,0,0,.3);
+    }
+
+    .nav-logo img {
+      height: 44px;
+      width: auto;
+      display: block;
+      transition: opacity var(--t-fast);
+    }
+    .nav-logo:hover img { opacity: .82; }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--cream);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      position: relative;
+      transition: color var(--t-fast);
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width .3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 2px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--t-fast);
+    }
+    .hamburger:hover { background: rgba(255,255,255,.08); }
+    .hamburger:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform .3s ease, opacity .2s ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 998;
+      background: rgba(44,24,16,.98);
+      padding: 5rem 2rem 2rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(-100%);
+      transition: transform .35s cubic-bezier(.4,0,.2,1);
+      border-bottom: 2px solid var(--gold);
+    }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a {
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 1.1rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(212,168,83,.15);
+      transition: color var(--t-fast), padding-left var(--t-fast);
+      display: block;
+    }
+    .mobile-menu a:hover { color: var(--gold); padding-left: .5rem; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+    /* ── Hero Slider ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      min-height: 520px;
+      overflow: hidden;
+    }
+
+    .slides-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .8s ease;
+      will-change: opacity;
+    }
+    .slide.active { opacity: 1; }
+
+    .slide-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Ken Burns keyframes */
+    @keyframes kb1 {
+      from { transform: scale(1)    translate( 0%,    0%); }
+      to   { transform: scale(1.11) translate(-2%,   -1%); }
+    }
+    @keyframes kb2 {
+      from { transform: scale(1)    translate( 0%,    0%); }
+      to   { transform: scale(1.11) translate( 2%,    1%); }
+    }
+    @keyframes kb3 {
+      from { transform: scale(1.08) translate( 2%,    1%); }
+      to   { transform: scale(1)    translate(-1%,    0%); }
+    }
+    @keyframes kb4 {
+      from { transform: scale(1)    translate(-1%,    1%); }
+      to   { transform: scale(1.11) translate( 1%,   -1%); }
+    }
+
+    /* Gradient overlay — dark at bottom, transparent at top */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(44,24,16,.90)  0%,
+        rgba(44,24,16,.52) 25%,
+        rgba(44,24,16,.18) 55%,
+        transparent        100%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Hero content — anchored to bottom center */
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      padding: 0 1.5rem 6.5rem;
+    }
+
+    .hero-logo {
+      width: clamp(160px, 26vw, 290px);
+      height: auto;
+      margin-bottom: 1.25rem;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,.65));
+    }
+
+    .hero-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.95rem);
+      color: var(--cream);
+      text-shadow: 0 2px 16px rgba(0,0,0,.75);
+      letter-spacing: .02em;
+      max-width: 560px;
+      line-height: 1.4;
+      margin-bottom: 1.75rem;
+    }
+    .hero-tagline em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      padding: .8rem 2.5rem;
+      border: 2px solid var(--gold);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border-radius: var(--radius-btn);
+      min-height: 44px;
+      transition: background var(--t-fast), color var(--t-fast);
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--espresso); }
+    .hero-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    /* Slider dots */
+    .slider-dots {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      transition: background var(--t-fast), transform var(--t-fast);
+    }
+    /* Extend hit area to 42×42 */
+    .dot::after {
+      content: '';
+      position: absolute;
+      inset: -16px;
+    }
+    .dot.active {
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+    .dot:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; border-radius: 50%; }
+
+    /* ── Section separator ── */
+    .sep {
+      height: 4px;
+      background: linear-gradient(to right, transparent, var(--terracotta), var(--gold), var(--terracotta), transparent);
+    }
+
+    /* ── Products Section ── */
+    .products-section {
+      padding: 5rem 2rem 6rem;
+      background: var(--cream-dark);
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-eyebrow {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--espresso);
+      line-height: 1.15;
+    }
+    .section-rule {
+      width: 60px; height: 3px;
+      background: linear-gradient(to right, var(--terracotta), var(--gold));
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (min-width: 600px)  { .products-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .products-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    /* Card */
+    .product-card {
+      background: #fff;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(36px);
+      will-change: opacity, transform;
+      transition: box-shadow var(--t-med), border-color var(--t-med), transform var(--t-med);
+    }
+    .product-card.revealed {
+      opacity: 1;
+      transform: translateY(0);
+      /* Restored transition also covers hover after reveal */
+      transition:
+        opacity .6s ease,
+        transform .6s ease,
+        box-shadow var(--t-med),
+        border-color var(--t-med);
+    }
+    .product-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--gold);
+    }
+
+    /* Card image — portrait 4:5, star of the show */
+    .card-image-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform .5s ease;
+    }
+    .product-card:hover .card-image-wrap img { transform: scale(1.06); }
+
+    /* Card body — compact so image stays ~70 % of card */
+    .card-body {
+      padding: 1rem 1.125rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--espresso);
+      margin-bottom: .375rem;
+      line-height: 1.2;
+    }
+    .card-desc {
+      font-size: .85rem;
+      color: var(--text-body);
+      line-height: 1.55;
+      font-style: italic;
+      flex: 1;
+      margin-bottom: .875rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* WhatsApp button on cards */
+    .btn-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      padding: .625rem 1rem;
+      background: var(--terracotta);
+      color: #fff;
+      text-decoration: none;
+      border-radius: var(--radius-btn);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      min-height: 44px;
+      flex-shrink: 0;
+      transition: background var(--t-fast), transform var(--t-fast);
+    }
+    .btn-wa:hover { background: var(--terra-dark); transform: scale(1.02); }
+    .btn-wa:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; }
+
+    /* ── Contact Footer ── */
+    .contact-footer {
+      background: var(--espresso);
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--terracotta), var(--gold), var(--terracotta));
+    }
+    .contact-footer::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(212,168,83,.09) 0%, transparent 68%);
+      pointer-events: none;
+    }
+
+    .footer-content {
+      max-width: 540px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .footer-eyebrow {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .625rem;
+    }
+    .footer-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: .75rem;
+    }
+    .footer-sub {
+      color: rgba(245,236,215,.58);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-footer-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 1rem 2.5rem;
+      background: var(--wa-green);
+      color: #fff;
+      text-decoration: none;
+      border-radius: var(--radius-btn);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      min-height: 52px;
+      box-shadow: 0 4px 24px rgba(37,211,102,.30);
+      transition: background var(--t-fast), transform var(--t-fast), box-shadow var(--t-fast);
+      margin-bottom: 3.5rem;
+    }
+    .btn-footer-wa:hover {
+      background: var(--wa-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(37,211,102,.48);
+    }
+    .btn-footer-wa:focus-visible { outline: 2px solid var(--wa-green); outline-offset: 4px; }
+
+    .footer-logo {
+      width: 110px;
+      height: auto;
+      opacity: .55;
+      display: block;
+      margin: 0 auto .875rem;
+    }
+    .footer-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: rgba(245,236,215,.42);
+      font-size: .9rem;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+    .footer-copy {
+      color: rgba(245,236,215,.26);
+      font-size: .75rem;
+      border-top: 1px solid rgba(245,236,215,.08);
+      padding-top: 1.5rem;
+    }
+
+    /* ── Floating WhatsApp FAB ── */
+    .fab-wa {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 9995;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: var(--wa-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,.45);
+      text-decoration: none;
+      transition: transform var(--t-fast), box-shadow var(--t-fast);
+    }
+    .fab-wa:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 32px rgba(37,211,102,.65);
+    }
+    .fab-wa:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+    @keyframes wa-pulse {
+      0%   { transform: scale(1); opacity: .7; }
+      100% { transform: scale(1.75); opacity: 0; }
+    }
+    .fab-wa::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--wa-green);
+      animation: wa-pulse 2.2s ease-out infinite;
+      z-index: -1;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .slide-img { animation: none !important; }
+      .product-card,
+      .product-card.revealed { transition: box-shadow var(--t-fast), border-color var(--t-fast) !important; opacity: 1 !important; transform: none !important; }
+      .product-card:hover { transform: none; }
+      .fab-wa::before { animation: none; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links  { display: none; }
+      .hamburger  { display: flex; }
+      .navbar     { padding: .875rem 1.25rem; }
+      .navbar.scrolled { padding: .625rem 1.25rem; }
+      .hero-content { padding: 0 1rem 5rem; }
+      .products-section { padding: 3.5rem 1rem 4rem; }
+      .contact-footer   { padding: 4rem 1.25rem 2.5rem; }
+      .fab-wa { bottom: 1.25rem; right: 1.25rem; width: 52px; height: 52px; }
+    }
+    @media (max-width: 480px) {
+      .hero-tagline  { font-size: 1.1rem; }
+      .footer-heading { font-size: 1.75rem; }
+      .btn-footer-wa  { padding: .875rem 1.75rem; font-size: .95rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#productos">Ir al contenido principal</a>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar" id="navbar" aria-label="Navegación principal">
+    <a class="nav-logo" href="#inicio" aria-label="Amasijos Argentinos El Maná — inicio">
+      <img src="assets/amazijos-argentinos-el-mana-logo.png" alt="Logo Amasijos Argentinos El Maná" width="150" height="44">
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger"
+            aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </nav>
+
+  <!-- ══ MOBILE MENU ══ -->
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Menú móvil" aria-hidden="true">
+    <a href="#inicio"    class="mobile-link">Inicio</a>
+    <a href="#productos" class="mobile-link">Productos</a>
+    <a href="#contacto"  class="mobile-link">Contacto</a>
+  </nav>
+
+  <!-- ══ HERO SLIDER ══ -->
+  <section class="hero" id="inicio" aria-label="Presentación">
+    <div class="slides-container" id="slidesContainer">
+
+  
+
+      <div class="slide" aria-hidden="true">
+        <img class="slide-img" src="assets/EMPANADAS%2016-9.png"
+             alt="Empanadas artesanales argentinas" loading="lazy">
+      </div>
+
+      <div class="slide" aria-hidden="true">
+        <img class="slide-img" src="assets/ALFAJORES%2016-9.png"
+             alt="Alfajores con dulce de leche" loading="lazy">
+      </div>
+
+      <div class="slide" aria-hidden="true">
+        <img class="slide-img" src="assets/PANES%2016-9.png"
+             alt="Pan artesanal horneado" loading="lazy">
+      </div>
+
+      <div class="slide" aria-hidden="true">
+        <img class="slide-img" src="assets/TARTAS%2016-9.png"
+             alt="Tartas caseras argentinas" loading="lazy">
+      </div>
+    </div>
+
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <img class="hero-logo"
+           src="assets/amazijos-argentinos-el-mana-logo.png"
+           alt="Amasijos Argentinos El Maná" width="290" height="96">
+      <p class="hero-tagline">
+        El sabor argentino que te <em>abraza el alma</em>
+      </p>
+      <a class="hero-cta" href="#productos">Ver nuestros amasijos</a>
+    </div>
+
+    <div class="slider-dots" id="sliderDots" role="group" aria-label="Diapositivas">
+      <button class="dot active" data-index="0" aria-label="Diapositiva 1"></button>
+      <button class="dot"        data-index="1" aria-label="Diapositiva 2"></button>
+      <button class="dot"        data-index="2" aria-label="Diapositiva 3"></button>
+      <button class="dot"        data-index="3" aria-label="Diapositiva 4"></button>
+      <button class="dot"        data-index="4" aria-label="Diapositiva 5"></button>
+    </div>
+  </section>
+
+  <div class="sep" aria-hidden="true"></div>
+
+  <!-- ══ PRODUCTS ══ -->
+  <section class="products-section" id="productos">
+    <div class="section-header">
+      <p class="section-eyebrow">Hecho con amor desde el sur</p>
+      <h2 class="section-title">Nuestros Amasijos</h2>
+      <div class="section-rule" aria-hidden="true"></div>
+    </div>
+
+    <div class="products-grid">
+
+      <!-- Empanadas -->
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <img src="assets/EMPANADAS%204-5.png"
+               alt="Empanadas artesanales argentinas"
+               loading="lazy" width="400" height="500">
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">Empanadas</h3>
+          <p class="card-desc">Masa tierna, relleno generoso — un abrazo del Río de la Plata.</p>
+          <a class="btn-wa"
+             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Empanadas"
+             target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+        </div>
+      </article>
+
+      <!-- Alfajores -->
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <img src="assets/ALJAFOR%204-5.png"
+               alt="Alfajores con dulce de leche"
+               loading="lazy" width="400" height="500">
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">Alfajores</h3>
+          <p class="card-desc">Dulce de leche entre galletas de maicena — suspiro que se deshace en el alma.</p>
+          <a class="btn-wa"
+             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Alfajores"
+             target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+        </div>
+      </article>
+
+      <!-- Tartas -->
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <img src="assets/TARTAS%204-5.png"
+               alt="Tartas artesanales argentinas"
+               loading="lazy" width="400" height="500">
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">Tartas</h3>
+          <p class="card-desc">Capas de tradición y sabor — cuentan historias de las cocinas del sur.</p>
+          <a class="btn-wa"
+             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Tartas"
+             target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+        </div>
+      </article>
+
+      <!-- Pan -->
+      <article class="product-card">
+        <div class="card-image-wrap">
+          <img src="assets/PAN%204-5.png"
+               alt="Pan artesanal horneado"
+               loading="lazy" width="400" height="500">
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">Pan Artesanal</h3>
+          <p class="card-desc">Miga esponjosa, corteza dorada — el pan de cada día con alma del sur.</p>
+          <a class="btn-wa"
+             href="https://wa.me/573145678786?text=Hola!%20Quiero%20pedir%20Pan%20Artesanal"
+             target="_blank" rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+            </svg>
+            Pedir por WhatsApp
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ══ CONTACT FOOTER ══ -->
+  <footer class="contact-footer" id="contacto">
+    <div class="footer-content">
+      <p class="footer-eyebrow">Estamos a un mensaje de distancia</p>
+      <h2 class="footer-heading">¿Antojo ahora?</h2>
+      <p class="footer-sub">Pedidos frescos, hechos con amor — directo a tu mesa.</p>
+
+      <a class="btn-footer-wa"
+         href="https://wa.me/573145678786"
+         target="_blank" rel="noopener noreferrer">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        Escríbenos al WhatsApp
+      </a>
+
+      <img class="footer-logo"
+           src="assets/amazijos-argentinos-el-mana-logo.png"
+           alt="Amasijos Argentinos El Maná" width="110" height="36" loading="lazy">
+      <p class="footer-tagline">El sabor argentino que te abraza el alma</p>
+      <p class="footer-copy">© 2025 Amasijos Argentinos — El Maná · Hecho con amor en Colombia por <a style="color:grey" target="_blank" href='https://cksoluciones.com'>CK Soluciones</a></p>
+    </div>
+  </footer>
+
+  <!-- ══ FLOATING WHATSAPP ══ -->
+  <a class="fab-wa"
+     href="https://wa.me/573145678786"
+     target="_blank" rel="noopener noreferrer"
+     aria-label="Contactar por WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+  </a>
+
+  <script>
+    // ── Navbar scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // ── Hamburger ──
+    const hamburger   = document.getElementById('hamburger');
+    const mobileMenu  = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      mobileMenu.setAttribute('aria-hidden', !open);
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    });
+
+    // Close mobile menu on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        hamburger.focus();
+      }
+    });
+
+    // ── Hero Slider ──
+    const slides    = Array.from(document.querySelectorAll('.slide'));
+    const dots      = Array.from(document.querySelectorAll('.dot'));
+    const kbAnims   = ['kb1', 'kb2', 'kb3', 'kb4'];
+    let current     = 0;
+    let sliderTimer = null;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function applyKB(index) {
+      if (prefersReducedMotion) return;
+      const img = slides[index].querySelector('.slide-img');
+      img.style.animation = 'none';
+      void img.offsetWidth;                        // force reflow → restart animation
+      img.style.animation = `${kbAnims[index % kbAnims.length]} 5.5s ease-out forwards`;
+    }
+
+    function goTo(n) {
+      slides[current].classList.remove('active');
+      slides[current].setAttribute('aria-hidden', 'true');
+      dots[current].classList.remove('active');
+
+      current = (n + slides.length) % slides.length;
+
+      slides[current].classList.add('active');
+      slides[current].setAttribute('aria-hidden', 'false');
+      dots[current].classList.add('active');
+
+      applyKB(current);
+    }
+
+    function startTimer() {
+      sliderTimer = setInterval(() => goTo(current + 1), 4000);
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        clearInterval(sliderTimer);
+        goTo(parseInt(dot.dataset.index, 10));
+        startTimer();
+      });
+    });
+
+    // Init first slide KB + timer
+    applyKB(0);
+    startTimer();
+
+    // ── Intersection Observer — staggered card reveal ──
+    const cards = document.querySelectorAll('.product-card');
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const idx = Array.from(cards).indexOf(entry.target);
+          setTimeout(() => entry.target.classList.add('revealed'), idx * 120);
+          io.unobserve(entry.target);
+        });
+      }, { threshold: 0.12 });
+
+      cards.forEach(card => io.observe(card));
+    } else {
+      // Fallback for old browsers
+      cards.forEach(card => card.classList.add('revealed'));
+    }
+  </script>
+</body>
+</html>
