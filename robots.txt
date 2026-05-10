@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amasijosargentinos.co/sitemap.xml
