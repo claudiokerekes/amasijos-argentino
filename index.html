@@ -1423,7 +1423,8 @@
     (function () {
       if (typeof gtag !== 'function') return;
 
-      // 1. Scroll depth — 25 / 50 / 75 / 90 %
+      // 1. Scroll depth — evento separado por profundidad
+      // En GA4 aparecen como filas distintas: scroll_depth_25, _50, _75, _90
       var depths = [25, 50, 75, 90], fired = {};
       window.addEventListener('scroll', function () {
         var scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -1432,26 +1433,32 @@
         depths.forEach(function (d) {
           if (pct >= d && !fired[d]) {
             fired[d] = true;
-            gtag('event', 'scroll_depth', { depth_percentage: d });
+            gtag('event', 'scroll_depth_' + d);
           }
         });
       }, { passive: true });
 
-      // 2. WhatsApp clicks — evento específico por producto
+      // 2. WhatsApp clicks — evento separado por producto / origen
+      // Productos:  wa_empanadas | wa_alfajores | wa_tartas | wa_pan_artesanal | wa_facturas
+      // Otros:      wa_footer (botón footer) | wa_fab (botón flotante)
       document.addEventListener('click', function (e) {
         var link = e.target.closest('a[href*="wa.me"]');
         if (!link) return;
-        var productText = 'contacto general';
+        var eventName = 'wa_fab';
         try {
           var u = new URL(link.href);
-          var t = u.searchParams.get('text');
-          if (t) productText = t;
+          var text = u.searchParams.get('text') || '';
+          var match = text.match(/pedir\s+(.+)$/i);
+          if (match) {
+            eventName = 'wa_' + match[1]
+              .toLowerCase()
+              .normalize('NFD').replace(/[̀-ͯ]/g, '')
+              .replace(/\s+/g, '_');
+          } else if (link.closest('footer')) {
+            eventName = 'wa_footer';
+          }
         } catch (err) {}
-        var sourceEl = link.closest('section[id], footer[id]');
-        gtag('event', 'whatsapp_click', {
-          product: productText,
-          source: sourceEl ? sourceEl.id : 'fab'
-        });
+        gtag('event', eventName);
       });
 
       // 3. Outbound clicks — excluye wa.me (ya registrado arriba)
