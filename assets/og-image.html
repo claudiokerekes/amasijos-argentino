@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      background: #2C1810;
+      font-family: 'Lato', sans-serif;
+      color: #F5ECD7;
+      position: relative;
+    }
+
+    /* Radial glow */
+    .glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(212,168,83,0.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Gold frame */
+    .frame {
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(212,168,83,0.35);
+      pointer-events: none;
+    }
+
+    /* Corner marks */
+    .frame::before,
+    .frame::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: #D4A853;
+      border-style: solid;
+    }
+    .frame::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+    .frame::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    /* Extra corners */
+    .frame-tr,
+    .frame-bl {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: #D4A853;
+      border-style: solid;
+    }
+    .frame-tr { top: 27px; right: 27px; border-width: 2px 2px 0 0; }
+    .frame-bl { bottom: 27px; left: 27px; border-width: 0 0 2px 2px; }
+
+    /* Layout */
+    .container {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 60px 80px;
+    }
+
+    .logo-wrap {
+      margin-bottom: 22px;
+    }
+    .logo-wrap img {
+      height: 90px;
+      width: auto;
+      filter: drop-shadow(0 2px 12px rgba(212,168,83,0.25));
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 54px;
+      font-weight: 700;
+      color: #F5ECD7;
+      letter-spacing: 0.02em;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 26px;
+      font-weight: 400;
+      color: #D4A853;
+      text-align: center;
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+    }
+
+    .divider {
+      width: 220px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #D4A853, transparent);
+      margin-bottom: 24px;
+    }
+
+    .products {
+      font-family: 'Lato', sans-serif;
+      font-size: 17px;
+      font-weight: 300;
+      color: #EDE0C4;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(245,236,215,0.55);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .location span {
+      color: rgba(212,168,83,0.6);
+    }
+
+    .wa-badge {
+      position: absolute;
+      bottom: 48px;
+      right: 64px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37,211,102,0.12);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 30px;
+      padding: 7px 16px 7px 12px;
+    }
+    .wa-badge svg {
+      width: 18px;
+      height: 18px;
+      fill: #25D366;
+      flex-shrink: 0;
+    }
+    .wa-badge span {
+      font-size: 13px;
+      font-weight: 400;
+      color: #25D366;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow"></div>
+  <div class="frame"></div>
+  <div class="frame-tr"></div>
+  <div class="frame-bl"></div>
+
+  <div class="container">
+    <div class="logo-wrap">
+      <img src="./amazijos-argentinos-el-mana-logo.png" alt="Logo">
+    </div>
+
+    <div class="brand">Amasijos Argentinos</div>
+    <div class="subtitle">— El Maná —</div>
+
+    <div class="divider"></div>
+
+    <div class="products">
+      Empanadas &nbsp;·&nbsp; Alfajores &nbsp;·&nbsp; Tartas &nbsp;·&nbsp; Pan Artesanal &nbsp;·&nbsp; Facturas
+    </div>
+
+    <div class="location">
+      <span>📍</span>
+      Sopó, Cundinamarca · Colombia
+      <span>·</span>
+      Pedidos por WhatsApp
+    </div>
+  </div>
+
+  <div class="wa-badge">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <span>+57 312 490 3099</span>
+  </div>
+
+</body>
+</html>
