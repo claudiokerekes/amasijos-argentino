@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora — Día de la Madre</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: sans-serif; background: #f5f5f0; color: #1a1a1a; padding: 1.5rem; max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 18px; font-weight: 500; margin-bottom: 0.2rem; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+  .section-title { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.06em; margin: 1.5rem 0 0.6rem; }
+  input[type=number] { padding: 6px 10px; border: 0.5px solid #ccc; border-radius: 8px; font-size: 14px; background: #fff; width: 95px; text-align: right; }
+  input[type=range] { flex: 1; }
+  hr { border: none; border-top: 0.5px solid #ddd; margin: 1.25rem 0; }
+
+  /* MARGEN */
+  .margen-box { background: #fff; border: 1.5px solid #0F6E56; border-radius: 12px; padding: 16px 18px; margin-bottom: 1rem; }
+  .margen-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .margen-title { font-size: 14px; font-weight: 600; color: #085041; }
+  .margen-value { font-size: 32px; font-weight: 700; color: #0F6E56; }
+  .margen-formula { font-size: 12px; color: #4a9; margin-top: 3px; }
+  .margen-slider-row { display: flex; align-items: center; gap: 10px; }
+  .margen-ticks { display: flex; justify-content: space-between; font-size: 11px; color: #bbb; margin-top: 4px; }
+  .margen-slider { accent-color: #0F6E56; width: 100%; }
+
+  .config-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .config-row label { font-size: 14px; color: #555; flex: 1; }
+
+  /* CARNES */
+  .card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .card.premium { border: 1.5px solid #c9a96e; }
+  .card-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .badge-premium { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 6px; background: #faeeda; color: #633806; }
+  .badge-custom { font-size: 10px; padding: 2px 8px; border-radius: 6px; background: #f5f5f0; border: 0.5px solid #ccc; color: #555; }
+  .field-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .field-row span { font-size: 13px; color: #555; flex: 1; }
+  .kg-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .kg-row label { font-size: 13px; color: #555; width: 130px; min-width: 130px; }
+  .kg-row .sv { font-size: 14px; font-weight: 500; min-width: 52px; text-align: right; }
+  .pieza-slider { accent-color: #185FA5; }
+  .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+  .m { background: #f5f5f0; border-radius: 8px; padding: 8px 10px; }
+  .m-label { font-size: 11px; color: #666; margin-bottom: 3px; }
+  .m-val { font-size: 14px; font-weight: 500; }
+  .green { color: #0F6E56; }
+  .amber { color: #854F0B; }
+  .blue  { color: #185FA5; }
+  .red   { color: #b91c1c; }
+
+  /* ENTRADAS */
+  .entradas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .entrada-card { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 14px 16px; }
+  .entrada-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; }
+  .entrada-qty-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .entrada-qty-row label { font-size: 13px; color: #555; flex: 1; }
+  .entrada-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+
+  /* REPORTE CLIENTE */
+  .reporte-box { background: #fffdf7; border: 1.5px solid #c9a96e; border-radius: 14px; padding: 20px 22px; margin-top: 1.5rem; }
+  .reporte-titulo { font-size: 15px; font-weight: 700; color: #4a2e00; margin-bottom: 4px; }
+  .reporte-subtitulo { font-size: 12px; color: #9a7a40; margin-bottom: 16px; }
+  .rt { width: 100%; border-collapse: collapse; }
+  .rt th { font-size: 11px; font-weight: 700; color: #9a7a40; text-transform: uppercase; letter-spacing: 0.06em; padding: 0 0 8px; border-bottom: 1.5px solid #e8d9b0; }
+  .rt th:not(:first-child) { text-align: right; }
+  .rt td { font-size: 14px; color: #3a2000; padding: 6px 0; border-bottom: 0.5px dotted #e8d9b0; vertical-align: baseline; }
+  .rt td:not(:first-child) { text-align: right; }
+  .rt .rt-section td { font-size: 11px; font-weight: 700; color: #9a7a40; text-transform: uppercase; letter-spacing: 0.06em; padding: 14px 0 4px; border-bottom: none; }
+  .rt .rt-total td { font-size: 16px; font-weight: 700; color: #4a2e00; border-top: 1.5px solid #c9a96e; border-bottom: none; padding-top: 12px; }
+  .rt .rt-total td:first-child { color: #9a7a40; font-size: 13px; font-weight: 600; }
+  .rt-det { font-size: 11px; color: #b89060; font-weight: 400; margin-left: 4px; }
+  .rt-precio { color: #0F6E56; font-weight: 600; }
+  .rt-sub { font-weight: 700; }
+
+  /* PRINT */
+  .no-print { }
+  .btn-pdf { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 10px 20px; background: #0F6E56; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .btn-pdf:hover { background: #085041; }
+  .cliente-nombre-input { font-size: 18px; font-weight: 700; color: #3a2000; border: none; border-bottom: 1.5px solid #c9a96e; background: transparent; padding: 2px 4px; width: 100%; outline: none; margin-bottom: 16px; }
+  .cliente-nombre-input::placeholder { color: #c9a96e; font-weight: 400; font-size: 15px; }
+  @media print {
+    body > * { display: none !important; }
+    #reporte-print-area { display: block !important; margin: 0; padding: 0; }
+    .reporte-box { border: 1px solid #c9a96e; margin-top: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none !important; }
+    .rt-precio { color: #0F6E56 !important; }
+  }
+
+  /* TOTALES */
+  .totales-box { background: #1a1a1a; color: #fff; border-radius: 14px; padding: 20px 22px; margin-top: 1.5rem; }
+  .totales-title { font-size: 13px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+  .totales-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .t { background: #2a2a2a; border-radius: 10px; padding: 12px 14px; }
+  .t-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .t-val { font-size: 20px; font-weight: 700; }
+  .t-val.tgreen { color: #4ade80; }
+  .t-val.tamber { color: #fbbf24; }
+  .t-val.tblue  { color: #60a5fa; }
+  .totales-breakdown { border-top: 0.5px solid #333; padding-top: 14px; }
+  .tb-row { display: flex; justify-content: space-between; font-size: 13px; color: #ccc; padding: 4px 0; }
+  .tb-row span:last-child { font-weight: 500; color: #fff; }
+  .tb-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #4ade80; padding: 10px 0 0; border-top: 0.5px solid #444; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>🍽️ Calculadora — Día de la Madre</h1>
+<div class="subtitle">Carnes: precio = costo × (1 + margen%) · Entradas: precio fijo</div>
+
+<!-- MARGEN -->
+<div class="section-title">Margen sobre costo (carnes)</div>
+<div class="margen-box">
+  <div class="margen-header">
+    <div>
+      <div class="margen-title">Markup</div>
+      <div class="margen-formula" id="formula-desc">precio = costo × 1.60</div>
+    </div>
+    <div class="margen-value" id="margen-display">60%</div>
+  </div>
+  <div class="margen-slider-row">
+    <span style="font-size:12px;color:#aaa">10%</span>
+    <input type="range" class="margen-slider" id="margenSlider" min="10" max="300" step="5" value="60" oninput="onMargenChange()">
+    <span style="font-size:12px;color:#aaa">300%</span>
+  </div>
+  <div class="margen-ticks">
+    <span>10</span><span>30</span><span>50</span><span>75</span><span>100</span><span>125</span><span>150</span><span>175</span><span>200</span><span>225</span><span>250</span><span>275</span><span>300</span>
+  </div>
+</div>
+
+<div class="config-row">
+  <label>Porción estándar carnes (gr)</label>
+  <input type="number" id="porcionGr" value="350" min="100" max="600" step="10" oninput="calcular()">
+</div>
+<div class="config-row">
+  <label>👥 Personas objetivo</label>
+  <div style="display:flex;align-items:center;gap:8px;flex:1;">
+    <span style="font-size:12px;color:#aaa;">5</span>
+    <input type="range" id="personasSlider" min="5" max="60" step="5" value="25"
+           style="flex:1;accent-color:#185FA5;" oninput="onPersonasChange()">
+    <span style="font-size:12px;color:#aaa;">60</span>
+    <span id="personas-display" style="font-size:16px;font-weight:700;color:#185FA5;min-width:72px;text-align:right;">25 pers.</span>
+  </div>
+</div>
+
+<hr>
+<div class="section-title">🥩 Carnes</div>
+<div id="carnes-container"></div>
+
+<hr>
+<div class="section-title">🥗 Entradas — precio de venta fijo (editá cantidad vendida)</div>
+<div class="entradas-grid">
+
+  <!-- TARTA -->
+  <div class="entrada-card">
+    <div class="entrada-title">🥗 Tarta</div>
+    <div class="field-row"><span>Costo c/u</span><input type="number" id="costo_tarta" value="3000" min="0" step="100" oninput="calcular()"></div>
+    <div class="field-row"><span>Precio venta</span><input type="number" id="venta_tarta" value="7000" min="0" step="100" oninput="calcular()"></div>
+    <div class="entrada-qty-row">
+      <label>Unidades a vender</label>
+      <input type="number" id="qty_tarta" value="10" min="0" step="1" style="width:70px;" oninput="calcular()">
+    </div>
+    <div class="entrada-metrics" id="metrics_tarta"></div>
+  </div>
+
+  <!-- EMPANADA -->
+  <div class="entrada-card">
+    <div class="entrada-title">🥟 Empanada</div>
+    <div class="field-row"><span>Costo c/u</span><input type="number" id="costo_empanada" value="2000" min="0" step="100" oninput="calcular()"></div>
+    <div class="field-row"><span>Precio venta</span><input type="number" id="venta_empanada" value="4000" min="0" step="100" oninput="calcular()"></div>
+    <div class="entrada-qty-row">
+      <label>Unidades a vender</label>
+      <input type="number" id="qty_empanada" value="20" min="0" step="1" style="width:70px;" oninput="calcular()">
+    </div>
+    <div class="entrada-metrics" id="metrics_empanada"></div>
+  </div>
+
+  <!-- CHORIPÁN -->
+  <div class="entrada-card">
+    <div class="entrada-title">🌭 Choripán</div>
+    <div class="field-row"><span>Costo c/u</span><input type="number" id="costo_choripan" value="3500" min="0" step="100" oninput="calcular()"></div>
+    <div class="field-row"><span>Precio venta</span><input type="number" id="venta_choripan" value="10000" min="0" step="100" oninput="calcular()"></div>
+    <div class="entrada-qty-row">
+      <label>Unidades a vender</label>
+      <input type="number" id="qty_choripan" value="20" min="0" step="1" style="width:70px;" oninput="calcular()">
+    </div>
+    <div class="entrada-metrics" id="metrics_choripan"></div>
+  </div>
+
+</div>
+
+<hr>
+<div class="section-title">👤 Servicio</div>
+<div class="entrada-card" style="max-width:380px;">
+  <div class="entrada-title">🧑‍🍳 Mesero</div>
+  <div class="field-row">
+    <span>Precio por hora</span>
+    <input type="number" id="precio_mesero" value="100000" min="0" step="1000" oninput="calcular()">
+  </div>
+  <div class="entrada-qty-row">
+    <label>Horas de servicio</label>
+    <input type="number" id="horas_mesero" value="4" min="0" step="0.5" style="width:70px;" oninput="calcular()">
+  </div>
+  <div class="entrada-metrics" id="metrics_mesero"></div>
+</div>
+
+<div id="resumen"></div>
+<div id="totales"></div>
+
+<div id="reporte-print-area">
+<hr class="no-print">
+<div class="section-title no-print">🧾 Reporte para el cliente</div>
+<input id="cliente-nombre" class="cliente-nombre-input" type="text"
+       placeholder="✏️  Nombre del cliente o cotización…"
+       oninput="calcular()" style="margin-bottom:4px;">
+<div id="reporte-cliente"></div>
+<div class="no-print" style="margin-top:12px;">
+  <button class="btn-pdf" onclick="window.print()">🖨️ Generar PDF / Imprimir</button>
+</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'amasijos_v1';
+
+const carnes = [
+  { id: 'anca',     nombre: 'Punta de anca',   precioKg: 25900, emoji: '🥩', porcionCustom: null, premium: false },
+  { id: 'bondiola', nombre: 'Bondiola entera',  precioKg: 23850, emoji: '🥩', porcionCustom: null, premium: false },
+  { id: 'costilla', nombre: 'Costilla carnuda', precioKg: 28800, emoji: '🍖', porcionCustom: null, premium: false },
+  { id: 'lomo',     nombre: 'Lomo de res',      precioKg: 50000, emoji: '🥩', porcionCustom: 300,  premium: true  },
+];
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+
+function saveState() {
+  const state = {
+    margen:    document.getElementById('margenSlider').value,
+    porcionGr: document.getElementById('porcionGr').value,
+    personas:       document.getElementById('personasSlider').value,
+    clienteNombre:  document.getElementById('cliente-nombre')?.value || '',
+    costo_tarta:    document.getElementById('costo_tarta').value,
+    venta_tarta:    document.getElementById('venta_tarta').value,
+    qty_tarta:      document.getElementById('qty_tarta').value,
+    costo_empanada:  document.getElementById('costo_empanada').value,
+    venta_empanada:  document.getElementById('venta_empanada').value,
+    qty_empanada:    document.getElementById('qty_empanada').value,
+    costo_choripan:  document.getElementById('costo_choripan').value,
+    venta_choripan:  document.getElementById('venta_choripan').value,
+    qty_choripan:    document.getElementById('qty_choripan').value,
+    precio_mesero:   document.getElementById('precio_mesero').value,
+    horas_mesero:    document.getElementById('horas_mesero').value,
+  };
+  carnes.forEach(c => {
+    state['kg_' + c.id] = document.getElementById('kg_' + c.id)?.value;
+    state['sv_' + c.id] = document.getElementById('sv_' + c.id)?.value;
+    if (c.porcionCustom !== null) {
+      state['porc_' + c.id] = document.getElementById('porc_' + c.id)?.value;
+    }
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  const s = JSON.parse(raw);
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+  set('margenSlider',    s.margen);
+  set('porcionGr',       s.porcionGr);
+  set('personasSlider',  s.personas);
+  const cnEl = document.getElementById('cliente-nombre');
+  if (cnEl && s.clienteNombre) cnEl.value = s.clienteNombre;
+  set('costo_tarta',     s.costo_tarta);
+  set('venta_tarta',     s.venta_tarta);
+  set('qty_tarta',       s.qty_tarta);
+  set('costo_empanada',  s.costo_empanada);
+  set('venta_empanada',  s.venta_empanada);
+  set('qty_empanada',    s.qty_empanada);
+  set('costo_choripan',  s.costo_choripan);
+  set('venta_choripan',  s.venta_choripan);
+  set('qty_choripan',    s.qty_choripan);
+  set('precio_mesero',   s.precio_mesero);
+  set('horas_mesero',    s.horas_mesero);
+  carnes.forEach(c => {
+    set('kg_' + c.id, s['kg_' + c.id]);
+    const svVal = s['sv_' + c.id] || s['slider_' + c.id];
+    if (svVal) {
+      const svEl = document.getElementById('sv_' + c.id);
+      if (svEl) svEl.value = svVal;
+      const sliderEl = document.getElementById('slider_' + c.id);
+      if (sliderEl) sliderEl.value = Math.min(parseFloat(svVal), parseFloat(sliderEl.max));
+    }
+    if (c.porcionCustom !== null) set('porc_' + c.id, s['porc_' + c.id]);
+  });
+  const m = parseInt(document.getElementById('margenSlider').value);
+  document.getElementById('margen-display').textContent = m + '%';
+  document.getElementById('formula-desc').textContent = `precio = costo × ${(1 + m/100).toFixed(2)}`;
+  const p = parseInt(document.getElementById('personasSlider').value) || 25;
+  document.getElementById('personas-display').textContent = p + ' pers.';
+}
+
+function onPersonasChange() {
+  const p = parseInt(document.getElementById('personasSlider').value);
+  document.getElementById('personas-display').textContent = p + ' pers.';
+  calcular();
+}
+
+function onSliderKg(id, val) {
+  document.getElementById('sv_' + id).value = parseFloat(val).toFixed(1);
+  calcular();
+}
+
+function onKgInput(id, val) {
+  const v = parseFloat(val) || 1;
+  const slider = document.getElementById('slider_' + id);
+  slider.value = Math.min(v, parseFloat(slider.max));
+  calcular();
+}
+
+function onMargenChange() {
+  const m = parseInt(document.getElementById('margenSlider').value);
+  document.getElementById('margen-display').textContent = m + '%';
+  document.getElementById('formula-desc').textContent = `precio = costo × ${(1 + m/100).toFixed(2)}`;
+  calcular();
+}
+
+function buildCarnes() {
+  document.getElementById('carnes-container').innerHTML = carnes.map(c => `
+    <div class="card${c.premium ? ' premium' : ''}">
+      <div class="card-title">
+        ${c.emoji} ${c.nombre}
+        ${c.premium ? '<span class="badge-premium">premium</span>' : ''}
+        ${c.porcionCustom !== null ? `<span class="badge-custom">porción ${c.porcionCustom}gr</span>` : ''}
+      </div>
+      <div class="field-row">
+        <span>Precio por kg</span>
+        <input type="number" id="kg_${c.id}" value="${c.precioKg}" min="0" step="100" oninput="calcular()">
+      </div>
+      ${c.porcionCustom !== null ? `
+      <div class="field-row">
+        <span>Porción (gr)</span>
+        <input type="number" id="porc_${c.id}" value="${c.porcionCustom}" min="100" max="800" step="10" oninput="calcular()">
+      </div>` : ''}
+      <div class="kg-row">
+        <label>Peso de la pieza</label>
+        <input type="range" class="pieza-slider" id="slider_${c.id}" min="1.0" max="10.0" step="0.1" value="2.5" oninput="onSliderKg('${c.id}', this.value)">
+        <input type="number" id="sv_${c.id}" value="2.5" min="0.1" step="0.1"
+               style="width:62px;text-align:right;border:0.5px solid #bbb;border-radius:6px;padding:3px 7px;font-size:14px;font-weight:500;background:#fff;"
+               oninput="onKgInput('${c.id}', this.value)">
+        <span style="font-size:13px;color:#555;">kg</span>
+      </div>
+      <div id="cov_${c.id}"></div>
+      <div class="metrics" id="metrics_${c.id}"></div>
+    </div>
+  `).join('');
+}
+
+function calcular() {
+  const porcionGlobal = parseFloat(document.getElementById('porcionGr').value) || 350;
+  const margen = parseInt(document.getElementById('margenSlider').value) || 60;
+  const mult = 1 + margen / 100;
+  const personas = parseInt(document.getElementById('personasSlider').value) || 25;
+
+  let totalCostoCarnes = 0, totalIngresoCarnes = 0, totalPorcionesCarnes = 0, resCarnes = '';
+  const preciosCarnes = [];
+
+  carnes.forEach(c => {
+    const precioKg = parseFloat(document.getElementById('kg_' + c.id)?.value) || c.precioKg;
+    const kg = parseFloat(document.getElementById('sv_' + c.id)?.value) || 2.5;
+    const porcion = c.porcionCustom !== null
+      ? (parseFloat(document.getElementById('porc_' + c.id)?.value) || c.porcionCustom)
+      : porcionGlobal;
+
+    const costoPorcion  = (precioKg / 1000) * porcion;
+    const ventaPorcion  = costoPorcion * mult;
+    const porciones     = Math.floor((kg * 1000) / porcion);
+    const costoTotal    = precioKg * kg;
+    const ingresoTotal  = ventaPorcion * porciones;
+    const ganancia      = ingresoTotal - costoTotal;
+
+    totalCostoCarnes     += costoTotal;
+    totalIngresoCarnes   += ingresoTotal;
+    totalPorcionesCarnes += porciones;
+    preciosCarnes.push({ nombre: c.nombre, emoji: c.emoji, porcion, ventaPorcion, porciones, ingresoTotal });
+
+    const covPct   = personas > 0 ? Math.round(porciones / personas * 100) : 0;
+    const covColor = porciones >= personas ? '#0F6E56' : porciones >= Math.ceil(personas * 0.5) ? '#854F0B' : '#b91c1c';
+    document.getElementById('cov_' + c.id).innerHTML =
+      `<div style="font-size:12px;color:${covColor};margin:2px 0 6px;">👥 ${porciones} porciones — ${covPct}% de las ${personas} personas</div>`;
+
+    document.getElementById('metrics_' + c.id).innerHTML = `
+      <div class="m"><div class="m-label">Costo porción</div><div class="m-val">${fmt(costoPorcion)}</div></div>
+      <div class="m"><div class="m-label">Venta porción</div><div class="m-val green">${fmt(ventaPorcion)}</div></div>
+      <div class="m"><div class="m-label">Porciones</div><div class="m-val">${porciones}</div></div>
+      <div class="m"><div class="m-label">Ingreso total</div><div class="m-val blue">${fmt(ingresoTotal)}</div></div>
+      <div class="m"><div class="m-label">Ganancia neta</div><div class="m-val amber">${fmt(ganancia)}</div></div>
+    `;
+
+    resCarnes += `
+      <div style="display:grid;grid-template-columns:1.8fr 0.9fr 0.6fr 1fr 1fr 1fr;gap:6px;align-items:center;padding:7px 0;border-bottom:0.5px solid #9FE1CB;font-size:13px;">
+        <span style="font-weight:600;color:#085041;">${c.emoji} ${c.nombre} <span style="font-weight:400;font-size:11px;color:#999">${porcion}gr</span></span>
+        <span class="green" style="font-weight:600;">${fmt(ventaPorcion)}</span>
+        <span style="color:#085041;">${porciones}</span>
+        <span style="color:#555;">${fmt(costoTotal)}</span>
+        <span class="blue">${fmt(ingresoTotal)}</span>
+        <span class="amber" style="font-weight:600;">${fmt(ganancia)}</span>
+      </div>`;
+  });
+
+  // ENTRADAS
+  const calcEntrada = (id) => {
+    const costo = parseFloat(document.getElementById('costo_' + id).value) || 0;
+    const venta = parseFloat(document.getElementById('venta_' + id).value) || 0;
+    const qty   = parseInt(document.getElementById('qty_' + id).value) || 0;
+    const costoT   = costo * qty;
+    const ventaT   = venta * qty;
+    const ganancia = ventaT - costoT;
+    const margenE  = costo > 0 ? (((venta - costo) / costo) * 100).toFixed(0) : 0;
+    document.getElementById('metrics_' + id).innerHTML = `
+      <div class="m"><div class="m-label">Precio al cliente</div><div class="m-val green">${fmt(venta)}</div></div>
+      <div class="m"><div class="m-label">Markup</div><div class="m-val">${margenE}%</div></div>
+      <div class="m"><div class="m-label">Ingreso total</div><div class="m-val blue">${fmt(ventaT)}</div></div>
+      <div class="m"><div class="m-label">Ganancia neta</div><div class="m-val amber">${fmt(ganancia)}</div></div>
+    `;
+    return { costo, venta, qty, costoT, ventaT, ganancia };
+  };
+
+  const tarta    = calcEntrada('tarta');
+  const empanada = calcEntrada('empanada');
+  const choripan = calcEntrada('choripan');
+
+  const totalCostoEntradas   = tarta.costoT + empanada.costoT + choripan.costoT;
+  const totalIngresoEntradas = tarta.ventaT + empanada.ventaT + choripan.ventaT;
+
+  // MESERO
+  const precioMesero   = parseFloat(document.getElementById('precio_mesero').value) || 0;
+  const horasMesero    = parseFloat(document.getElementById('horas_mesero').value) || 0;
+  const ingresoMesero  = precioMesero * horasMesero;
+  const costoMesero    = ingresoMesero * 0.5;
+  const gananciaMesero = ingresoMesero * 0.5;
+  document.getElementById('metrics_mesero').innerHTML = `
+    <div class="m"><div class="m-label">Precio al cliente</div><div class="m-val green">${fmt(precioMesero)}/hr</div></div>
+    <div class="m"><div class="m-label">Ingreso total</div><div class="m-val blue">${fmt(ingresoMesero)}</div></div>
+    <div class="m"><div class="m-label">Costo (50%)</div><div class="m-val">${fmt(costoMesero)}</div></div>
+    <div class="m"><div class="m-label">Ganancia neta</div><div class="m-val amber">${fmt(gananciaMesero)}</div></div>
+  `;
+
+  const totalCosto   = totalCostoCarnes + totalCostoEntradas + costoMesero;
+  const totalIngreso = totalIngresoCarnes + totalIngresoEntradas + ingresoMesero;
+  const totalGanancia = totalIngreso - totalCosto;
+  const margenSobreVenta = totalIngreso > 0 ? ((totalGanancia / totalIngreso) * 100).toFixed(1) : 0;
+
+  // RESUMEN CARNES
+  document.getElementById('resumen').innerHTML = `
+    <div style="background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:12px;padding:14px 16px;margin-top:1.5rem;">
+      <div style="font-size:12px;font-weight:600;color:#085041;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Resumen carnes — markup ${margen}%</div>
+      <div style="display:grid;grid-template-columns:1.8fr 0.9fr 0.6fr 1fr 1fr 1fr;gap:6px;padding:4px 0 8px;border-bottom:0.5px solid #9FE1CB;">
+        <span style="font-size:11px;font-weight:600;color:#085041;">Corte</span>
+        <span style="font-size:11px;font-weight:600;color:#085041;">Precio venta</span>
+        <span style="font-size:11px;font-weight:600;color:#085041;">Porc.</span>
+        <span style="font-size:11px;font-weight:600;color:#085041;">Costo pieza</span>
+        <span style="font-size:11px;font-weight:600;color:#085041;">Ingreso</span>
+        <span style="font-size:11px;font-weight:600;color:#085041;">Ganancia</span>
+      </div>
+      ${resCarnes}
+    </div>
+  `;
+
+  // TOTALES GLOBALES
+  document.getElementById('totales').innerHTML = `
+    <div class="totales-box">
+      <div class="totales-title">📊 Totales globales — todo el evento</div>
+      <div class="totales-grid">
+        <div class="t"><div class="t-label">Inversión total</div><div class="t-val tblue">${fmt(totalCosto)}</div></div>
+        <div class="t"><div class="t-label">Ingreso total</div><div class="t-val tgreen">${fmt(totalIngreso)}</div></div>
+        <div class="t"><div class="t-label">Ganancia neta</div><div class="t-val tamber">${fmt(totalGanancia)}</div></div>
+      </div>
+      <div class="totales-breakdown">
+        <div class="tb-row" style="font-size:13px;font-weight:600;padding-bottom:10px;border-bottom:0.5px solid #444;margin-bottom:6px;">
+          <span>👥 Porciones carnes / personas objetivo</span>
+          <span style="color:${totalPorcionesCarnes >= personas ? '#4ade80' : '#f87171'};">${totalPorcionesCarnes} porc. / ${personas} pers. ${totalPorcionesCarnes >= personas ? '✓ alcanza' : '⚠ faltan ' + (personas - totalPorcionesCarnes)}</span>
+        </div>
+        <div class="tb-row"><span>🥩 Costo carnes</span><span>${fmt(totalCostoCarnes)}</span></div>
+        <div class="tb-row"><span>🥩 Ingreso carnes</span><span>${fmt(totalIngresoCarnes)}</span></div>
+        <div class="tb-row"><span>🥩 Ganancia carnes</span><span>${fmt(totalIngresoCarnes - totalCostoCarnes)}</span></div>
+        <div style="border-top:0.5px solid #333;margin:8px 0;"></div>
+        <div class="tb-row"><span>🥗 Costo entradas (${tarta.qty} tartas + ${empanada.qty} empanadas + ${choripan.qty} choripanes)</span><span>${fmt(totalCostoEntradas)}</span></div>
+        <div class="tb-row"><span>🥗 Ingreso entradas</span><span>${fmt(totalIngresoEntradas)}</span></div>
+        <div class="tb-row"><span>🥗 Ganancia entradas</span><span>${fmt(totalIngresoEntradas - totalCostoEntradas)}</span></div>
+        ${horasMesero > 0 ? `
+        <div style="border-top:0.5px solid #333;margin:8px 0;"></div>
+        <div class="tb-row"><span>🧑‍🍳 Costo mesero (${horasMesero} hs · 50%)</span><span>${fmt(costoMesero)}</span></div>
+        <div class="tb-row"><span>🧑‍🍳 Ingreso mesero</span><span>${fmt(ingresoMesero)}</span></div>
+        <div class="tb-row"><span>🧑‍🍳 Ganancia mesero</span><span>${fmt(gananciaMesero)}</span></div>` : ''}
+        <div style="border-top:0.5px solid #333;margin:8px 0;"></div>
+        <div style="font-size:11px;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;">Precios al cliente</div>
+        <div class="tb-row"><span>🥗 Tarta</span><span style="color:#4ade80;">${fmt(tarta.venta)} c/u</span></div>
+        <div class="tb-row"><span>🥟 Empanada</span><span style="color:#4ade80;">${fmt(empanada.venta)} c/u</span></div>
+        <div class="tb-row"><span>🌭 Choripán</span><span style="color:#4ade80;">${fmt(choripan.venta)} c/u</span></div>
+        ${horasMesero > 0 ? `<div class="tb-row"><span>🧑‍🍳 Mesero</span><span style="color:#4ade80;">${fmt(precioMesero)}/hr · ${horasMesero} hs</span></div>` : ''}
+        <div class="tb-total"><span>GANANCIA TOTAL NETA</span><span>${fmt(totalGanancia)}</span></div>
+        <div style="font-size:12px;color:#aaa;text-align:right;margin-top:4px;">margen sobre ventas: ${margenSobreVenta}%</div>
+      </div>
+    </div>
+  `;
+
+  // REPORTE CLIENTE
+  const clienteNombre = document.getElementById('cliente-nombre')?.value || '';
+  const carnesVisibles = preciosCarnes.filter(p => p.porciones > 0);
+  const entradasVisibles = [
+    { emoji: '🥗', nombre: 'Tarta',    venta: tarta.venta,    qty: tarta.qty,    ventaT: tarta.ventaT    },
+    { emoji: '🥟', nombre: 'Empanada', venta: empanada.venta, qty: empanada.qty, ventaT: empanada.ventaT },
+    { emoji: '🌭', nombre: 'Choripán', venta: choripan.venta, qty: choripan.qty, ventaT: choripan.ventaT },
+  ].filter(e => e.qty > 0);
+  const totalReporte = carnesVisibles.reduce((s, p) => s + p.ingresoTotal, 0)
+                     + entradasVisibles.reduce((s, e) => s + e.ventaT, 0)
+                     + ingresoMesero;
+
+  document.getElementById('reporte-cliente').innerHTML = `
+    <div class="reporte-box">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px;">
+        <div>
+          ${clienteNombre ? `<div style="font-size:18px;font-weight:700;color:#3a2000;margin-bottom:4px;">${clienteNombre}</div>` : ''}
+          <div class="reporte-titulo" style="margin-bottom:2px;">🧾 Cotización</div>
+          <div class="reporte-subtitulo" style="margin-bottom:0;">Precios al público</div>
+        </div>
+        <img src="https://amasijosargentinos.co/assets/amazijos-argentinos-el-mana-logo.png"
+             alt="Amasijos Argentinos" style="height:64px;object-fit:contain;flex-shrink:0;">
+      </div>
+      <table class="rt">
+        <thead>
+          <tr>
+            <th style="width:42%">Producto</th>
+            <th>Precio unit.</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${carnesVisibles.length ? `
+          <tr class="rt-section"><td colspan="4">🥩 Carnes</td></tr>
+          ${carnesVisibles.map(p => `
+          <tr>
+            <td>${p.emoji} ${p.nombre} <span class="rt-det">${p.porcion}gr/porc.</span></td>
+            <td class="rt-precio">${fmt(p.ventaPorcion)}</td>
+            <td>${p.porciones} porc.</td>
+            <td class="rt-sub">${fmt(p.ingresoTotal)}</td>
+          </tr>`).join('') }` : ''}
+          ${entradasVisibles.length ? `
+          <tr class="rt-section"><td colspan="4">🥗 Entradas</td></tr>
+          ${entradasVisibles.map(e => `
+          <tr>
+            <td>${e.emoji} ${e.nombre}</td>
+            <td class="rt-precio">${fmt(e.venta)}</td>
+            <td>${e.qty} u.</td>
+            <td class="rt-sub">${fmt(e.ventaT)}</td>
+          </tr>`).join('')}` : ''}
+          ${horasMesero > 0 ? `
+          <tr class="rt-section"><td colspan="4">👤 Servicio</td></tr>
+          <tr>
+            <td>🧑‍🍳 Mesero</td>
+            <td class="rt-precio">${fmt(precioMesero)}/hr</td>
+            <td>${horasMesero} hs.</td>
+            <td class="rt-sub">${fmt(ingresoMesero)}</td>
+          </tr>` : ''}
+          <tr class="rt-total">
+            <td colspan="3">Total</td>
+            <td>${fmt(totalReporte)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  saveState();
+}
+
+buildCarnes();
+loadState();
+calcular();
+</script>
+</body>
+</html>
