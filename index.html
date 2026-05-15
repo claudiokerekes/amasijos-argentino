@@ -15,6 +15,20 @@
     gtag('config', 'G-97J7VBN7GT', { send_page_view: true });
   </script>
 
+  <!-- ══ Meta Pixel ══ -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1554853549682930');
+  fbq('track', 'PageView');
+  </script>
+
   <!-- ══ SEO: Título y descripción ══ -->
   <title>Empanadas Argentinas Artesanales en Sopó | Amasijos El Maná</title>
   <meta name="description" content="Empanadas argentinas artesanales, tartas saladas, alfajores y pan horneado en Sopó, Cundinamarca. Pedidos por WhatsApp ✓ Domicilios disponibles · Amasijos Argentinos El Maná.">
@@ -940,6 +954,9 @@
   </style>
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1554853549682930&ev=PageView&noscript=1"
+/></noscript>
 
   <a class="skip-link" href="#productos">Ir al contenido principal</a>
 
@@ -1415,9 +1432,10 @@
       cards.forEach(card => card.classList.add('revealed'));
     }
 
-    // ── GA4 Custom Events ──
+    // ── GA4 + Meta Pixel Custom Events ──
     (function () {
-      if (typeof gtag !== 'function') return;
+      var hasGtag = typeof gtag === 'function';
+      var hasFbq  = typeof fbq  === 'function';
 
       // 1. Scroll depth — evento separado por profundidad
       // En GA4 aparecen como filas distintas: scroll_depth_25, _50, _75, _90
@@ -1429,7 +1447,8 @@
         depths.forEach(function (d) {
           if (pct >= d && !fired[d]) {
             fired[d] = true;
-            gtag('event', 'scroll_depth_' + d);
+            if (hasGtag) gtag('event', 'scroll_depth_' + d);
+            if (hasFbq)  fbq('trackCustom', 'scroll_depth_' + d);
           }
         });
       }, { passive: true });
@@ -1454,7 +1473,8 @@
             eventName = 'wa_footer';
           }
         } catch (err) {}
-        gtag('event', eventName);
+        if (hasGtag) gtag('event', eventName);
+        if (hasFbq)  fbq('trackCustom', eventName);
       });
 
       // 3. Outbound clicks — excluye wa.me (ya registrado arriba)
@@ -1464,10 +1484,12 @@
         var href = link.getAttribute('href') || '';
         if (href.indexOf('wa.me') !== -1) return;
         if (/^https?:\/\//.test(href) && href.indexOf(location.hostname) === -1) {
-          gtag('event', 'outbound_click', {
+          var params = {
             link_url: href,
             link_text: (link.innerText || link.getAttribute('aria-label') || '').trim().slice(0, 100)
-          });
+          };
+          if (hasGtag) gtag('event', 'outbound_click', params);
+          if (hasFbq)  fbq('trackCustom', 'outbound_click', params);
         }
       });
 
